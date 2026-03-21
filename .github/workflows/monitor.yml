@@ -1,0 +1,41 @@
+name: YouTube Monitor
+
+on:
+  schedule:
+    - cron: '*/15 * * * *' # Uruchamiaj co 15 minut
+  workflow_dispatch: # Pozwala na ręczne uruchomienie z zakładki Actions
+
+permissions:
+  contents: write # Wymagane, aby móc zapisywać seen_videos.json do repozytorium
+
+jobs:
+  run_monitor:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Run YouTube Monitor
+      env:
+        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        YOUTUBE_CHANNELS: ${{ secrets.YOUTUBE_CHANNELS }}
+      run: python youtube_monitor.py --once
+
+    - name: Commit and push changes
+      run: |
+        git config --global user.name 'GitHub Actions Bot'
+        git config --global user.email 'actions@github.com'
+        git add seen_videos.json
+        git diff --quiet && git diff --staged --quiet || (git commit -m "Aktualizacja seen_videos.json [skip ci]" && git push)

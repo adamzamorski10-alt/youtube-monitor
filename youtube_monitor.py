@@ -244,7 +244,11 @@ class YouTubeMonitor:
                 time.sleep(60)  # Czekaj minutę przed kolejną próbą
 
 
-def parser.add_argument('--once', action='store_true', help='Uruchom sprawdzenie raz i wyjdź (dla GitHub Actions)')
+def main():
+    parser = argparse.ArgumentParser(description='YouTube Monitor')
+    parser.add_argument('--config', default='config.json', help='Ścieżka do pliku konfiguracyjnego')
+    parser.add_argument('--ignore-cache', action='store_true', help='Zignoruj cache (seen_videos.json)')
+    parser.add_argument('--once', action='store_true', help='Uruchom sprawdzenie raz i wyjdź (dla GitHub Actions)')
     
     args = parser.parse_args()
     
@@ -253,12 +257,7 @@ def parser.add_argument('--once', action='store_true', help='Uruchom sprawdzenie
         if args.once:
             monitor.run_once()
         else:
-        
-    args = parser.parse_args()
-    
-    try:
-        monitor = YouTubeMonitor(config_file=args.config, ignore_cache=args.ignore_cache)
-        monitor.run()
+            monitor.run()
     except Exception as e:
         logger.critical(f"Krytyczny błąd: {e}")
         raise

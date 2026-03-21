@@ -186,11 +186,11 @@ Jeśli wszystko działa:
 ## ⚙️ Dostosowanie
 
 ### Zmień częstotliwość sprawdzania
-W pliku `youtube_monitor.py`, linia 204:
+W pliku `youtube_monitor.py` (w funkcji `run`):
 ```python
-schedule.every(15).minutes.do(self.check_for_new_videos)
+time.sleep(60)  # Czekaj minutę
 ```
-Zmień `15` na inną wartość (w minutach).
+Zmień `60` na inną wartość (w sekundach), np. `300` dla 5 minut.
 
 ### Zmień zakres "nowych" filmów
 W pliku `youtube_monitor.py`, linia 144:
