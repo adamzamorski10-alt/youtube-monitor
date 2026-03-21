@@ -1,0 +1,60 @@
+name: YouTube Monitor
+
+on:
+  schedule:
+    # Uruchamia się co 15 minut (24/7)
+    - cron: '*/15 * * * *'
+  
+  # Możliwość ręcznego uruchomienia z GitHub UI
+  workflow_dispatch:
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: Run YouTube Monitor
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          YOUTUBE_CHANNELS: ${{ secrets.YOUTUBE_CHANNELS }}
+        run: python youtube_monitor.py --once
+      
+      - name: Commit and push seen_videos.json
+        if: always()
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          # Sprawdź czy seen_videos.json się zmienił
+          if git diff --quiet seen_videos.json; then
+            echo "Brak zmian w seen_videos.json"
+          else
+            echo "Aktualizuję seen_videos.json..."
+            git add seen_videos.json
+            git commit -m "Update seen_videos.json - $(date '+%Y-%m-%d %H:%M:%S')" || true
+            git push || echo "Push did not succeed"
+          fi
+      
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: monitor-logs
+          path: youtube_monitor.log
+          retention-days: 7

@@ -1,0 +1,33 @@
+# Pliki konfiguracyjne z kluczami API
+config.json
+
+# Logi
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# System
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# NSSM
+nssm.exe
+
+# Pozostaw seen_videos.json - potrzebny dla GitHub Actions!

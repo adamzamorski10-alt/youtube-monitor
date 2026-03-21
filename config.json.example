@@ -1,0 +1,15 @@
+{
+  "youtube_api_key": "TWOJ_KLUCZ_YOUTUBE_API",
+  "telegram_bot_token": "TWOJ_TOKEN_BOTA_TELEGRAM",
+  "telegram_chat_id": "TWOJ_CHAT_ID",
+  "channels": [
+    {
+      "name": "Nazwa Kanału 1",
+      "channel_id": "UC..."
+    },
+    {
+      "name": "Nazwa Kanału 2",
+      "channel_id": "UC..."
+    }
+  ]
+}
