@@ -38,4 +38,4 @@ jobs:
         git config --global user.name 'GitHub Actions Bot'
         git config --global user.email 'actions@github.com'
         git add seen_videos.json
-        git diff --quiet && git diff --staged --quiet || (git commit -m "Aktualizacja seen_videos.json [skip ci]" && git push)
+        git diff --quiet && git diff --staged --quiet || (git commit -m "Aktualizacja seen_videos.json [skip ci]" && git pull --rebase origin main && git push)
